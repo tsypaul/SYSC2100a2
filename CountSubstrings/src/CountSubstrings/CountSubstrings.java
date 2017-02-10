@@ -4,56 +4,64 @@ import java.io.*;
 
 public class CountSubstrings {
 
-    private static int findBrute(List<Character> text, List<Character> pattern) {
+	private static int findBrute(List<Character> text, List<Character> pattern) {
         int n = text.size();
         int m = pattern.size();
-        for (int i = 0; i <= n-m; i++ ){
-            int k = 0;
-            while (k<m && text.get(i+k) == pattern.get(k)){
-                k++;
-            }
-            if (k == m){
-                return i;
-            }
+        for (int i = 0; i <= n - m; i++) { // try every starting index
+                                        // within text
+        int k = 0; // k is index into pattern
+        while (k < m && text.get(i + k) == pattern.get(k))
+            // kth character of pattern matches
+            k++;
+        if (k == m) // if we reach the end of the pattern,
+            return i; // substring text[i..i+m-1] is a match
         }
-        return -1;
+        return -1; // search failed
     }
 
 
     public static void main(String[] args) {
-        List<Character> l = null;
+        List<Character> l = new ArrayList();
         List<Character> pattern = new ArrayList<>();
+        long begin = 0;
         boolean error = true;
         String filename = null;
-        int size = 0;
         while(error){ 
 	        System.out.println("Please enter the path for the input file: ");
-	        filename = new Scanner (System.in) .nextLine();
+	        filename = new Scanner (System.in).nextLine();
         	try{
-	            Scanner s = new Scanner(new File(filename));
-	            while (s.hasNext()){
-	                l.add(s.next().toCharArray()[size]);
-	                size++;
+	            BufferedReader br = new BufferedReader(new FileReader(filename));
+	            String line;
+	            try{
+	            	begin = System.currentTimeMillis();
+		            while((line = br.readLine()) != null){
+		            	for (int i=0; i<line.length(); i++){
+		            		l.add(new Character(line.charAt(i)));
+		            	}
+		            }
+		            error = false;
+	            }catch (IOException e){
+	            	System.out.println("Reading error: " + e.getMessage());
+	            	error = true;
 	            }
-	            error = false;
-	            s.close();
 	        }catch (FileNotFoundException e){
 	            System.out.println("File not exist: " + e.getMessage());
 	            error = true;
 	        }
 	    }
         System.out.println("Enter the pattern to look for: ");
-        char[] c = new Scanner(System.in).nextLine().toCharArray();
-        size = 0;
-        while (size < c.length) {
-            pattern.add(c[size]);
-            size ++;
+        Scanner s1 = new Scanner(System.in);
+        String s = s1.next();
+        for(int i=0; i < s.length(); i++){
+        	pattern.add(s.charAt(i));
         }
-        long begin = System.currentTimeMillis();
-        l = new ArrayList<>();
-        System.out.println("Using ArrayLists: " + findBrute(l, pattern) + " matches, derived in " + filename + " " + (System.currentTimeMillis() - begin) + " milliseconds.");
+        s1.close();
+        int count = 0;
+        while (findBrute(l, pattern)!=-1){
+        	count++;
+        }
+        System.out.println("Using ArrayLists: " + count + " matches, derived in " + " " + (System.currentTimeMillis() - begin) + " milliseconds.");
         long begin2 = System.currentTimeMillis();
-        l = new LinkedList<>();
-        System.out.println("Using LinkedLists: " + findBrute(l, pattern) + " matches, derived in " + filename + " " + (System.currentTimeMillis() - begin2) + " milliseconds");
+        System.out.println("Using LinkedLists: " + count + " matches, derived in " + " " + (System.currentTimeMillis() - begin2) + " milliseconds");
     }
 }
