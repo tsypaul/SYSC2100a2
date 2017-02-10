@@ -1,5 +1,4 @@
-
-package CountSubstrings;
+package CountSubstring;
 import java.util.*;
 import java.io.*;
 
@@ -77,7 +76,7 @@ public class CountSubstrings {
         	System.out.println("Please enter the path for the input file: ");
         	filename = new Scanner (System.in).nextLine();
         	try {
-        		s1 = new Scanner(new File("/" + filename));
+        		s1 = new Scanner(new File(filename));
         		System.out.println("Enter the pattern to look for: ");
                 Scanner s2 = new Scanner(System.in);
                 String s = s2.next();
